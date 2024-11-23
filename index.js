@@ -14,7 +14,18 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: process.env.NETLIFY_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "https://a5--kanbas-react-web-app-xinbo.netlify.app",
+        "http://localhost:3000",
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 const sessionOptions = {
