@@ -11,10 +11,13 @@ import ModuleRoutes from "./Kanbas/Modules/routes.js";
 const app = express();
 
 app.use(express.json());
+
 app.use(
   cors({
     credentials: true,
-    origin: process.env.NETLIFY_URL || "http://localhost:3000",
+    origin:
+      "https://a5--kanbas-react-web-app-xinbo.netlify.app" ||
+      "http://localhost:3000",
   })
 );
 const sessionOptions = {
