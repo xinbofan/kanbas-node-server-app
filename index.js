@@ -23,7 +23,7 @@ app.use(
     credentials: true,
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "https://a5--kanbas-react-web-app-xinbo.netlify.app",
+        "https://a6--kanbas-react-web-app-xinbo.netlify.app",
         "http://localhost:3000",
       ];
 
