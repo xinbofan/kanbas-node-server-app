@@ -3,6 +3,48 @@ import * as courseDao from "../Courses/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
 
 export default function UserRoutes(app) {
+  const findCoursesForUser = async (req, res) => {
+    const currentUser = req.session["currentUser"];
+    if (!currentUser) {
+      res.sendStatus(401);
+      return;
+    }
+    if (currentUser.role === "ADMIN") {
+      const courses = await courseDao.findAllCourses();
+      res.json(courses);
+      return;
+    }
+    let { uid } = req.params;
+    if (uid === "current") {
+      uid = currentUser._id;
+    }
+    const courses = await enrollmentsDao.findCoursesForUser(uid);
+    res.json(courses);
+  };
+  app.get("/api/users/:uid/courses", findCoursesForUser);
+
+  const enrollUserInCourse = async (req, res) => {
+    console.log("run enrollUserInCourse");
+    let { uid, cid } = req.params;
+    if (uid === "current") {
+      const currentUser = req.session["currentUser"];
+      uid = currentUser._id;
+    }
+    const status = await enrollmentsDao.enrollUserInCourse(uid, cid);
+    res.send(status);
+  };
+  const unenrollUserFromCourse = async (req, res) => {
+    let { uid, cid } = req.params;
+    if (uid === "current") {
+      const currentUser = req.session["currentUser"];
+      uid = currentUser._id;
+    }
+    const status = await enrollmentsDao.unenrollUserFromCourse(uid, cid);
+    res.send(status);
+  };
+  app.post("/api/users/:uid/courses/:cid", enrollUserInCourse);
+  app.delete("/api/users/:uid/courses/:cid", unenrollUserFromCourse);
+
   const createUser = async (req, res) => {
     const user = await dao.createUser(req.body);
     res.json(user);
@@ -59,6 +101,7 @@ export default function UserRoutes(app) {
   };
   const signin = async (req, res) => {
     const { username, password } = req.body;
+    console.log("123");
     const currentUser = await dao.findUserByCredentials(username, password);
     if (currentUser) {
       req.session["currentUser"] = currentUser;
@@ -82,6 +125,7 @@ export default function UserRoutes(app) {
   };
   const findCoursesForEnrolledUser = (req, res) => {
     let { userId } = req.params;
+    console.log("findCoursesForEnrollendUser run");
     console.log(req.session);
     if (userId === "current") {
       const currentUser = req.session["currentUser"];
