@@ -79,6 +79,7 @@ export default function CourseRoutes(app) {
   });
 
   app.post("/api/courses/:courseId/quizzes", async (req, res) => {
+    console.log("Received POST request to create quiz");
     const { courseId } = req.params;
     const quiz = {
       ...req.body,
