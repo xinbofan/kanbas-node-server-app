@@ -38,15 +38,7 @@ export default function QuizRoutes(app) {
 
   app.get("/api/quizzes/:quizId", async (req, res) => {
     const { quizId } = req.params;
-    try {
-      const quiz = await quizzesDao.findQuizById(quizId);
-      if (!quiz) {
-        return res.status(404).send({ message: "Quiz not found" });
-      }
-      res.json(quiz);
-    } catch (error) {
-      console.error("Error fetching quiz by ID:", error);
-      res.status(500).send({ message: "Error fetching quiz" });
-    }
+    const quiz = await quizzesDao.findQuizById(quizId);
+    res.json(quiz);
   });
 }

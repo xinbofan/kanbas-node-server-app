@@ -47,12 +47,8 @@ const schema = new mongoose.Schema(
   { collection: "quizzes" }
 );
 
+// Calculate total points for quiz
 schema.pre("save", async function (next) {
-  if (!this.questions || this.questions.length === 0) {
-    this.points = 0;
-    return next();
-  }
-
   const QuestionModel = mongoose.model("QuestionModel");
 
   const questions = await QuestionModel.find({ _id: { $in: this.questions } });

@@ -19,7 +19,6 @@ export default function QuestionRoutes(app) {
 
   app.get("/api/questions/:questionId", async (req, res) => {
     const { questionId } = req.params;
-    console.log(questionId);
     const status = await questionsDao.findQuestionById(questionId);
     res.send(status);
   });
